@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>OrchFlow</title>
+	<h:outputStylesheet library="css" name="bootstrap.min.css" />
+	<link href="resources/css/configurar.css" rel="stylesheet"></link>
+</h:head>
+<body>
+	<div id="centro">
+		<h1>Cadastrar Controladores</h1>
+		<h3>Adicione os controladores que serão orquestrados pelo
+			OrchFlow</h3>
+
+
+		<h:form id="form">
+			<p:growl id="msgs" />
+			<p:panelGrid styleClass="panelGridCenter" id="grid">
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Nome:" for="nome" />
+					</p:column>
+					<p:column>
+						<p:inputText id="nome" value="#{controllers.controller.name}"
+							size="20" />
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column>
+						<p:outputLabel value="IP:" for="ip" />
+					</p:column>
+					<p:column>
+						<p:inputText id="ip" value="#{controllers.controller.ip}"
+							size="20" autocomplete="off" required="true" />
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Porta:" for="port" />
+					</p:column>
+					<p:column>
+						<p:inputText id="port" value="#{controllers.controller.port}"
+							size="20" autocomplete="off" required="true" />
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column colspan="2">
+						<p:selectOneButton value="#{controllers.controller.controller}"
+							required="true">
+							<f:selectItem itemLabel="Floodlight" itemValue="Floodlight" />
+							<f:selectItem itemLabel="Ryu" itemValue="Ryu" />
+							<f:selectItem itemLabel="OpenDaylight" itemValue="OpenDaylight" />
+						</p:selectOneButton>
+					</p:column>
+				</p:row>
+				<p:focus context="grid" />
+			</p:panelGrid>
+			<h:panelGrid columns="2" styleClass="panelGridCenter">
+				<p:commandButton id="btn_add" value="Adicionar"
+					update="controllers msgs grid @parent"
+					action="#{controllers.reinit}">
+					<p:collector value="#{controllers.controller}"
+						addTo="#{controllers.controllers}" unique="true" />
+				</p:commandButton>
+			</h:panelGrid>
+		</h:form>
+
+
+		<p:outputPanel id="controllers" styleClass="outPanel">
+			<p:dataTable id="data" var="c" value="#{controllers.controllers}"
+				emptyMessage="Nenhum controlador cadastrado!">
+				<p:column headerText="Nome">
+					<h:outputText value="#{c.name}" />
+				</p:column>
+				<p:column headerText="IP">
+					<h:outputText value="#{c.ip}" />
+				</p:column>
+				<p:column headerText="Porta">
+					<h:outputText value="#{c.port}" />
+				</p:column>
+				<p:column headerText="Controlador">
+					<h:outputText value="#{c.controller}" />
+				</p:column>
+				<p:column headerText="Ação">
+					<p:commandLink id="cmdL" update="controllers" process="controllers"
+						class="btn btn-danger btn-xs" style="color: white">
+						<p:collector value="#{c}" removeFrom="#{controllers.controllers}"
+							unique="true" />
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Remover
+						</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</p:outputPanel>
+
+		<h:form id="form2">
+			<h:panelGrid columns="2" styleClass="panelGridCenter">
+				<p:commandLink update="controllers" class="btn btn-danger"
+					style="color: white" actionListener="#{controllers.removeAll}">
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Remover todos
+				</p:commandLink>
+				&#xA0;
+				<button id="form2:exec" name="form2:exec" class="btn btn-success">
+					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+					Concluir
+				</button>
+				<p:commandButton id="exec" value="Executar"
+					action="#{controllers.executar}" style="display: none" />
+			</h:panelGrid>
+		</h:form>
+	</div>
+</body>
+</html>

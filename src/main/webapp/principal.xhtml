@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+	<title>OrchFlow</title>
+	<link href="resources/css/bootstrap.min.css" rel="stylesheet"></link>
+	<h:outputScript library="primefaces" name="jquery/jquery.js"
+		target="head" />
+	<script src="resources/js/bootstrap.min.js"></script>
+	<link href="resources/css/principal.css" rel="stylesheet"></link>
+	<script src="resources/js/principal.js"></script>
+
+</h:head>
+<body onresize="iframe()" onload="iframe()">
+	<div id="conteudo">
+		<div id="regras" class="collapse in width">
+			<div id="centro">
+				<h1>OrchFlow</h1>
+				<!-- <h3>Ferramenta para Orquestração de Múltiplos Controladores	OpenFlow</h3> -->
+			</div>
+			<div class="panel-group" id="accordion">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" data-parent="#accordion"
+								href="#collapse1">Criar rota proativa</a>
+						</h4>
+					</div>
+					<div id="collapse1" class="panel-collapse collapse">
+						<div class="panel-body">
+							<h:form id="formP">
+								<p:messages id="msgsP" autoUpdate="true" closable="true" />
+								<p:panelGrid columns="2"
+									class="panelGridCenter companyHeaderGrid">
+									<p:outputLabel value="Origem:" for="src" />
+									<h:selectOneMenu id="src"
+										value="#{proactiveRoute.regra.ipv4_src}" class="form-control"
+										required="true">
+										<f:selectItem itemLabel="Select One" itemValue="" />
+										<f:selectItems value="#{neo4jHosts.hosts}" />
+									</h:selectOneMenu>
+									<p:outputLabel value="Destino:" for="dst" />
+									<h:selectOneMenu id="dst"
+										value="#{proactiveRoute.regra.ipv4_dst}" class="form-control"
+										required="true">
+										<f:selectItem itemLabel="Select One" itemValue="" />
+										<f:selectItems value="#{neo4jHosts.hosts}" />
+									</h:selectOneMenu>
+									<p:outputLabel value="Nome:" for="name" />
+									<h:inputText id="name" value="#{proactiveRoute.regra.name}"
+										size="10" class="form-control" required="true"
+										autocomplete="off" requiredMessage="Nome obrigatório!" />
+									<p:outputLabel value="Cookie:" for="cookie" />
+									<p:inputText id="cookie" value="#{proactiveRoute.regra.cookie}"
+										size="10" class="form-control" autocomplete="off" />
+									<p:outputLabel value="Ativo: " for="active" />
+									<p:selectBooleanButton id="active"
+										value="#{proactiveRoute.regra.active}" onLabel="Sim"
+										offLabel="Não" />
+									<p:outputLabel value="Idle Timeout:" for="idle" />
+									<p:spinner id="idle"
+										value="#{proactiveRoute.regra.idle_timeout}" min="0" size="10" />
+									<p:outputLabel value="Hard Timeout:" for="hard" />
+									<p:spinner id="hard"
+										value="#{proactiveRoute.regra.hard_timeout}" min="0" size="10" />
+									<p:outputLabel value="Priority:" for="prt" />
+									<p:spinner id="prt" value="#{proactiveRoute.regra.priority}"
+										min="0" max="32767" size="10" />
+									<p:outputLabel value="Ethernet Type:" for="eth" />
+									<p:inputText id="eth" value="#{proactiveRoute.regra.eth_type}"
+										size="10" class="form-control" autocomplete="off" />
+									<p:outputLabel value="Protocol Number: " for="proto" />
+									<h:selectOneMenu id="proto"
+										value="#{proactiveRoute.regra.ip_proto}" class="form-control">
+										<f:selectItem itemLabel="None" itemValue="-1" />
+										<f:selectItem itemLabel="ICMP" itemValue="1" />
+										<f:selectItem itemLabel="TCP" itemValue="6" />
+										<f:selectItem itemLabel="UDP" itemValue="17" />
+									</h:selectOneMenu>
+									<p:outputLabel value="Source Port:" for="tpsrc" />
+									<p:inputText id="tpsrc" value="#{proactiveRoute.regra.tp_src}"
+										size="10" class="form-control" autocomplete="off" />
+									<p:outputLabel value="Destination Port:" for="tpdst" />
+									<p:inputText id="tpdst" value="#{proactiveRoute.regra.tp_dst}"
+										size="10" class="form-control" autocomplete="off" />
+								</p:panelGrid>
+								<p:panelGrid columns="2"
+									styleClass="panelGridCenter companyHeaderGrid">
+									<p:commandLink update="formP msgsP @parent :formGP:rotas"
+										class="btn btn-success" style="color: white"
+										action="#{proactiveRoute.exec}">
+										<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Criar
+								</p:commandLink>
+								</p:panelGrid>
+
+							</h:form>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" data-parent="#accordion"
+								href="#collapse2">Gerenciar rotas proativas</a>
+						</h4>
+					</div>
+					<div id="collapse2" class="panel-collapse collapse">
+						<div class="panel-body">
+							<h:form id="formGP">
+								<p:outputPanel id="rotas" styleClass="outPanel">
+									<p:dataTable var="rota" value="#{proactiveRoute.regras}"
+										emptyMessage="Nenhuma regra adicionada!">
+										<p:column headerText="Nome">
+											<h:outputText value="#{rota.name}" />
+										</p:column>
+										<p:column headerText="Origem">
+											<h:outputText value="#{rota.ipv4_src}" />
+										</p:column>
+										<p:column headerText="Destino">
+											<h:outputText value="#{rota.ipv4_dst}" />
+										</p:column>
+										<p:column headerText="Ação" style="width:55px">
+											<p:commandButton
+												update=":formGP:myModalBody :formGP:myModalHeader"
+												icon="ui-icon-search" title="View">
+												<f:setPropertyActionListener value="#{rota}"
+													target="#{proactiveRoute.regraSelecionada}" />
+												<f:passThroughAttribute name="data-toggle" value="modal" />
+												<f:passThroughAttribute name="data-target" value="#myModalP" />
+											</p:commandButton>
+										</p:column>
+									</p:dataTable>
+								</p:outputPanel>
+
+								<div class="modal fade bs-example-modal-sm" id="myModalP"
+									tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+									<div class="modal-dialog modal-sm" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal"
+													aria-label="Close">
+													<span aria-hidden="true">&#xD7;</span>
+												</button>
+												<p:outputPanel id="myModalHeader">
+													<h4 class="modal-title" id="myModalLabel">
+														<h:outputText
+															value="#{proactiveRoute.regraSelecionada.name}" />
+													</h4>
+												</p:outputPanel>
+											</div>
+											<div class="modal-body">
+												<p:outputPanel id="myModalBody">
+													<p:panelGrid columns="2"
+														styleClass="panelGridCenter companyHeaderGrid">
+														<p:outputLabel value="Origem:" />
+														<h:outputText
+															value="#{proactiveRoute.regraSelecionada.ipv4_src}" />
+														<p:outputLabel value="Destino:" />
+														<h:outputText
+															value="#{proactiveRoute.regraSelecionada.ipv4_dst}" />
+														<p:outputLabel value="Cookie:" />
+														<h:outputText
+															value="#{proactiveRoute.regraSelecionada.cookie}" />
+														<p:outputLabel value="Ativo:" />
+														<h:outputText
+															value="#{proactiveRoute.regraSelecionada.active}" />
+														<p:outputLabel value="Idle Timeout:" />
+														<h:outputText
+															value="#{proactiveRoute.regraSelecionada.idle_timeout}" />
+														<p:outputLabel value="Hard Timeout:" />
+														<h:outputText
+															value="#{proactiveRoute.regraSelecionada.hard_timeout}" />
+														<p:outputLabel value="Prioridade:" />
+														<h:outputText
+															value="#{proactiveRoute.regraSelecionada.priority}" />
+														<p:outputLabel value="Ethernet Type:" />
+														<h:outputText
+															value="#{proactiveRoute.regraSelecionada.eth_type}" />
+														<p:outputLabel value="Protocol Number:" />
+														<h:outputText
+															value="#{proactiveRoute.regraSelecionada.ip_proto}" />
+														<p:outputLabel value="Porta Origem:" />
+														<h:outputText
+															value="#{proactiveRoute.regraSelecionada.tp_src}" />
+														<p:outputLabel value="Porta Destino:" />
+														<h:outputText
+															value="#{proactiveRoute.regraSelecionada.tp_dst}" />
+													</p:panelGrid>
+												</p:outputPanel>
+											</div>
+											<div class="modal-footer">
+												<p:commandLink update="rotas" class="btn btn-danger"
+													style="color: white"
+													action="#{proactiveRoute.removeRegra(proactiveRoute.regraSelecionada)}">
+													<f:passThroughAttribute name="data-dismiss" value="modal" />
+													<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Excluir
+												</p:commandLink>
+											</div>
+										</div>
+									</div>
+								</div>
+							</h:form>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" data-parent="#accordion"
+								href="#collapse3">Criar rota reativa</a>
+						</h4>
+					</div>
+					<div id="collapse3" class="panel-collapse collapse">
+						<div class="panel-body">
+							<h:form id="formR">
+								<p:messages id="msgsR" autoUpdate="true" closable="true" />
+								<p:panelGrid columns="2"
+									class="panelGridCenter companyHeaderGrid">
+									<p:outputLabel value="Origem:" for="src" />
+									<h:selectOneMenu id="src"
+										value="#{reactiveRoute2.regra.ipv4_src}" class="form-control"
+										required="true">
+										<f:selectItem itemLabel="Select One" itemValue="" />
+										<f:selectItems value="#{neo4jHosts.hosts}" />
+									</h:selectOneMenu>
+									<p:outputLabel value="Destino:" for="dst" />
+									<h:selectOneMenu id="dst"
+										value="#{reactiveRoute2.regra.ipv4_dst}" class="form-control"
+										required="true">
+										<f:selectItem itemLabel="Select One" itemValue="" />
+										<f:selectItems value="#{neo4jHosts.hosts}" />
+									</h:selectOneMenu>
+									<p:outputLabel value="Nome:" for="name" />
+									<h:inputText id="name" value="#{reactiveRoute2.regra.name}"
+										size="10" class="form-control" required="true"
+										autocomplete="off" requiredMessage="Nome obrigatório!" />
+									<p:outputLabel value="Cookie:" for="cookie" />
+									<p:inputText id="cookie" value="#{reactiveRoute2.regra.cookie}"
+										size="10" class="form-control" autocomplete="off" />
+									<p:outputLabel value="Ativo: " for="active" />
+									<p:selectBooleanButton id="active"
+										value="#{reactiveRoute2.regra.active}" onLabel="Sim"
+										offLabel="Não" />
+									<p:outputLabel value="Idle Timeout:" for="idle" />
+									<p:spinner id="idle"
+										value="#{reactiveRoute2.regra.idle_timeout}" min="0" size="10" />
+									<p:outputLabel value="Hard Timeout:" for="hard" />
+									<p:spinner id="hard"
+										value="#{reactiveRoute2.regra.hard_timeout}" min="0" size="10" />
+									<p:outputLabel value="Priority:" for="prt" />
+									<p:spinner id="prt" value="#{reactiveRoute2.regra.priority}"
+										min="0" max="32767" size="10" />
+									<p:outputLabel value="Ethernet Type:" for="eth" />
+									<p:inputText id="eth" value="#{reactiveRoute2.regra.eth_type}"
+										size="10" class="form-control" autocomplete="off" />
+									<p:outputLabel value="Protocol Number: " for="proto" />
+									<h:selectOneMenu id="proto"
+										value="#{reactiveRoute2.regra.ip_proto}" class="form-control">
+										<f:selectItem itemLabel="None" itemValue="-1" />
+										<f:selectItem itemLabel="ICMP" itemValue="1" />
+										<f:selectItem itemLabel="TCP" itemValue="6" />
+										<f:selectItem itemLabel="UDP" itemValue="17" />
+									</h:selectOneMenu>
+									<p:outputLabel value="Source Port:" for="tpsrc" />
+									<p:inputText id="tpsrc" value="#{reactiveRoute2.regra.tp_src}"
+										size="10" class="form-control" autocomplete="off" />
+									<p:outputLabel value="Destination Port:" for="tpdst" />
+									<p:inputText id="tpdst" value="#{reactiveRoute2.regra.tp_dst}"
+										size="10" class="form-control" autocomplete="off" />
+								</p:panelGrid>
+								<p:panelGrid columns="2"
+									styleClass="panelGridCenter companyHeaderGrid">
+									<p:commandLink update="formR msgsR @parent :formGR:rotas"
+										class="btn btn-success" style="color: white"
+										action="#{reactiveRoute2.exec(false)}">
+										<f:passThroughAttribute name="data-dismiss" value="modal" />
+										<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Criar
+								</p:commandLink>
+								</p:panelGrid>
+
+							</h:form>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" data-parent="#accordion"
+								href="#collapse4">Gerenciar rotas reativas</a>
+						</h4>
+					</div>
+					<div id="collapse4" class="panel-collapse collapse">
+						<div class="panel-body">
+							<h:form id="formGR">
+								<p:outputPanel id="rotas" styleClass="outPanel">
+									<p:dataTable var="rota" value="#{reactiveRoute2.regras}"
+										emptyMessage="Nenhuma regra adicionada!">
+										<p:column headerText="Nome">
+											<h:outputText value="#{rota.name}" />
+										</p:column>
+										<p:column headerText="Origem">
+											<h:outputText value="#{rota.ipv4_src}" />
+										</p:column>
+										<p:column headerText="Destino">
+											<h:outputText value="#{rota.ipv4_dst}" />
+										</p:column>
+										<p:column headerText="Ação" style="width:55px">
+											<p:commandButton
+												update=":formGR:myModalBody :formGR:myModalHeader"
+												icon="ui-icon-search" title="View">
+												<f:setPropertyActionListener value="#{rota}"
+													target="#{reactiveRoute.regraSelecionada}" />
+												<f:passThroughAttribute name="data-toggle" value="modal" />
+												<f:passThroughAttribute name="data-target" value="#myModal" />
+											</p:commandButton>
+										</p:column>
+									</p:dataTable>
+								</p:outputPanel>
+
+								<div class="modal fade bs-example-modal-sm" id="myModal"
+									tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+									<div class="modal-dialog modal-sm" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal"
+													aria-label="Close">
+													<span aria-hidden="true">&#xD7;</span>
+												</button>
+												<p:outputPanel id="myModalHeader">
+													<h4 class="modal-title" id="myModalLabel">
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.name}" />
+													</h4>
+												</p:outputPanel>
+											</div>
+											<div class="modal-body">
+												<p:outputPanel id="myModalBody">
+													<p:panelGrid columns="2"
+														styleClass="panelGridCenter companyHeaderGrid">
+														<p:outputLabel value="Origem:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.ipv4_src}" />
+														<p:outputLabel value="Destino:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.ipv4_dst}" />
+														<p:outputLabel value="Cookie:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.cookie}" />
+														<p:outputLabel value="Ativo:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.active}" />
+														<p:outputLabel value="Idle Timeout:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.idle_timeout}" />
+														<p:outputLabel value="Hard Timeout:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.hard_timeout}" />
+														<p:outputLabel value="Prioridade:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.priority}" />
+														<p:outputLabel value="Ethernet Type:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.eth_type}" />
+														<p:outputLabel value="Protocol Number:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.ip_proto}" />
+														<p:outputLabel value="Porta Origem:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.tp_src}" />
+														<p:outputLabel value="Porta Destino:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.tp_dst}" />
+													</p:panelGrid>
+												</p:outputPanel>
+											</div>
+											<div class="modal-footer">
+												<p:commandLink update="rotas" class="btn btn-danger"
+													style="color: white"
+													action="#{reactiveRoute.removeRegra(reactiveRoute.regraSelecionada)}">
+													<f:passThroughAttribute name="data-dismiss" value="modal" />
+													<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Excluir
+												</p:commandLink>
+											</div>
+										</div>
+									</div>
+								</div>
+							</h:form>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" data-parent="#accordion"
+								href="#collapse5"
+								onclick="document.getElementById('hibrido').value=true;console.log(document.getElementById('hibrido').value)">Criar
+								rota híbrida</a>
+						</h4>
+					</div>
+					<div id="collapse5" class="panel-collapse collapse">
+						<div class="panel-body">
+							<h:form id="formH">
+								<p:messages id="msgsH" autoUpdate="true" closable="true" />
+								<p:panelGrid columns="2"
+									class="panelGridCenter companyHeaderGrid">
+									<p:outputLabel value="Origem:" for="src" />
+									<h:selectOneMenu id="src"
+										value="#{reactiveRoute2.regra.ipv4_src}" class="form-control"
+										required="true">
+										<f:selectItem itemLabel="Select One" itemValue="" />
+										<f:selectItems value="#{neo4jHosts.hosts}" />
+									</h:selectOneMenu>
+									<p:outputLabel value="Destino:" for="dst" />
+									<h:selectOneMenu id="dst"
+										value="#{reactiveRoute2.regra.ipv4_dst}" class="form-control"
+										required="true">
+										<f:selectItem itemLabel="Select One" itemValue="" />
+										<f:selectItems value="#{neo4jHosts.hosts}" />
+									</h:selectOneMenu>
+									<p:outputLabel value="Nome:" for="name" />
+									<h:inputText id="name" value="#{reactiveRoute2.regra.name}"
+										size="10" class="form-control" required="true"
+										autocomplete="off" requiredMessage="Nome obrigatório!" />
+									<p:outputLabel value="Cookie:" for="cookie" />
+									<p:inputText id="cookie" value="#{reactiveRoute2.regra.cookie}"
+										size="10" class="form-control" autocomplete="off" />
+									<p:outputLabel value="Ativo: " for="active" />
+									<p:selectBooleanButton id="active"
+										value="#{reactiveRoute2.regra.active}" onLabel="Sim"
+										offLabel="Não" />
+									<p:outputLabel value="Idle Timeout:" for="idle" />
+									<p:spinner id="idle"
+										value="#{reactiveRoute2.regra.idle_timeout}" min="0" size="10" />
+									<p:outputLabel value="Hard Timeout:" for="hard" />
+									<p:spinner id="hard"
+										value="#{reactiveRoute2.regra.hard_timeout}" min="0" size="10" />
+									<p:outputLabel value="Priority:" for="prt" />
+									<p:spinner id="prt" value="#{reactiveRoute2.regra.priority}"
+										min="0" max="32767" size="10" />
+									<p:outputLabel value="Ethernet Type:" for="eth" />
+									<p:inputText id="eth" value="#{reactiveRoute2.regra.eth_type}"
+										size="10" class="form-control" autocomplete="off" />
+									<p:outputLabel value="Protocol Number: " for="proto" />
+									<h:selectOneMenu id="proto"
+										value="#{reactiveRoute2.regra.ip_proto}" class="form-control">
+										<f:selectItem itemLabel="None" itemValue="-1" />
+										<f:selectItem itemLabel="ICMP" itemValue="1" />
+										<f:selectItem itemLabel="TCP" itemValue="6" />
+										<f:selectItem itemLabel="UDP" itemValue="17" />
+									</h:selectOneMenu>
+									<p:outputLabel value="Source Port:" for="tpsrc" />
+									<p:inputText id="tpsrc" value="#{reactiveRoute2.regra.tp_src}"
+										size="10" class="form-control" autocomplete="off" />
+									<p:outputLabel value="Destination Port:" for="tpdst" />
+									<p:inputText id="tpdst" value="#{reactiveRoute2.regra.tp_dst}"
+										size="10" class="form-control" autocomplete="off" />
+								</p:panelGrid>
+								<p:panelGrid columns="2"
+									styleClass="panelGridCenter companyHeaderGrid">
+									<p:commandLink update="formH msgsH @parent :formGH:rotas"
+										class="btn btn-success" style="color: white"
+										action="#{reactiveRoute2.exec(true)}">
+										<f:passThroughAttribute name="data-dismiss" value="modal" />
+										<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Criar
+								</p:commandLink>
+								</p:panelGrid>
+
+							</h:form>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" data-parent="#accordion"
+								href="#collapse6">Gerenciar rotas híbridas</a>
+						</h4>
+					</div>
+					<div id="collapse6" class="panel-collapse collapse">
+						<div class="panel-body">
+							<h:form id="formGH">
+								<p:outputPanel id="rotas" styleClass="outPanel">
+									<p:dataTable var="rota" value="#{reactiveRoute.regras}"
+										emptyMessage="Nenhuma regra adicionada!">
+										<p:column headerText="Nome">
+											<h:outputText value="#{rota.name}" />
+										</p:column>
+										<p:column headerText="Origem">
+											<h:outputText value="#{rota.ipv4_src}" />
+										</p:column>
+										<p:column headerText="Destino">
+											<h:outputText value="#{rota.ipv4_dst}" />
+										</p:column>
+										<p:column headerText="Ação" style="width:55px">
+											<p:commandButton
+												update=":formGH:myModalBody :formGH:myModalHeader"
+												icon="ui-icon-search" title="View">
+												<f:setPropertyActionListener value="#{rota}"
+													target="#{reactiveRoute.regraSelecionada}" />
+												<f:passThroughAttribute name="data-toggle" value="modal" />
+												<f:passThroughAttribute name="data-target" value="#myModal" />
+											</p:commandButton>
+										</p:column>
+									</p:dataTable>
+								</p:outputPanel>
+
+								<div class="modal fade bs-example-modal-sm" id="myModal"
+									tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+									<div class="modal-dialog modal-sm" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal"
+													aria-label="Close">
+													<span aria-hidden="true">&#xD7;</span>
+												</button>
+												<p:outputPanel id="myModalHeader">
+													<h4 class="modal-title" id="myModalLabel">
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.name}" />
+													</h4>
+												</p:outputPanel>
+											</div>
+											<div class="modal-body">
+												<p:outputPanel id="myModalBody">
+													<p:panelGrid columns="2"
+														styleClass="panelGridCenter companyHeaderGrid">
+														<p:outputLabel value="Origem:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.ipv4_src}" />
+														<p:outputLabel value="Destino:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.ipv4_dst}" />
+														<p:outputLabel value="Cookie:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.cookie}" />
+														<p:outputLabel value="Ativo:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.active}" />
+														<p:outputLabel value="Idle Timeout:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.idle_timeout}" />
+														<p:outputLabel value="Hard Timeout:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.hard_timeout}" />
+														<p:outputLabel value="Prioridade:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.priority}" />
+														<p:outputLabel value="Ethernet Type:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.eth_type}" />
+														<p:outputLabel value="Protocol Number:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.ip_proto}" />
+														<p:outputLabel value="Porta Origem:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.tp_src}" />
+														<p:outputLabel value="Porta Destino:" />
+														<h:outputText
+															value="#{reactiveRoute.regraSelecionada.tp_dst}" />
+													</p:panelGrid>
+												</p:outputPanel>
+											</div>
+											<div class="modal-footer">
+												<p:commandLink update="rotas" class="btn btn-danger"
+													style="color: white"
+													action="#{reactiveRoute.removeRegra(reactiveRoute.regraSelecionada)}">
+													<f:passThroughAttribute name="data-dismiss" value="modal" />
+													<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Excluir
+												</p:commandLink>
+											</div>
+										</div>
+									</div>
+								</div>
+							</h:form>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" data-parent="#accordion"
+								href="#collapse7">Configurar controladores</a>
+						</h4>
+					</div>
+					<div id="collapse7" class="panel-collapse collapse">
+						<div class="panel-body">
+							<h:form id="form">
+								<p:messages id="msgs" autoUpdate="true" closable="true"
+									onclick="fadeoutfunction()" />
+								<p:panelGrid columns="2"
+									styleClass="panelGridCenter companyHeaderGrid" id="grid">
+									<p:outputLabel value="Nome:" for="nome" />
+									<p:inputText id="nome" value="#{controllers.controller.name}"
+										size="20" />
+									<p:outputLabel value="IP:" for="ip" />
+									<p:inputText id="ip" value="#{controllers.controller.ip}"
+										size="20" autocomplete="off" required="true"
+										requiredMessage="Ip obrigatório!" />
+									<p:outputLabel value="Porta:" for="port" />
+									<p:inputText id="port" value="#{controllers.controller.port}"
+										size="20" autocomplete="off" required="true"
+										requiredMessage="Porta obrigatório!" />
+									<p:focus context="grid" />
+								</p:panelGrid>
+
+								<p:panelGrid columns="2"
+									styleClass="panelGridCenter companyHeaderGrid">
+									<p:row>
+										<p:column colspan="2">
+											<p:selectOneButton
+												value="#{controllers.controller.controller}" required="true">
+												<f:selectItem itemLabel="Floodlight" itemValue="Floodlight" />
+												<f:selectItem itemLabel="Ryu" itemValue="Ryu" />
+												<f:selectItem itemLabel="OpenDaylight"
+													itemValue="OpenDaylight" itemDisabled="true" />
+											</p:selectOneButton>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+
+								<p:panelGrid columns="2"
+									styleClass="panelGridCenter companyHeaderGrid">
+									<p:commandButton id="btn_add" value="Adicionar"
+										update="controllers msgs grid @parent"
+										action="#{controllers.createNew}">
+									</p:commandButton>
+								</p:panelGrid>
+							</h:form>
+
+							<p:outputPanel id="controllers" styleClass="outPanel">
+								<p:dataTable id="data" var="c"
+									value="#{controllers.controllers}"
+									emptyMessage="Nenhum controlador cadastrado!"
+									rowIndexVar="rowIndex">
+									<p:column headerText="IP" style="width:35%">
+										<h:outputText value="#{c.ip}" />
+									</p:column>
+									<p:column headerText="Porta" style="width:15%">
+										<h:outputText value="#{c.port}" />
+									</p:column>
+									<p:column headerText="Controlador" style="width:30%">
+										<h:outputText value="#{c.controller}" />
+									</p:column>
+									<p:column headerText="Ação" style="width:55px">
+										<p:commandLink id="cmdL" update="controllers"
+											process="controllers" class="btn btn-danger btn-xs"
+											style="color: white">
+											<p:collector value="#{c}"
+												removeFrom="#{controllers.controllers}" unique="true" />
+											<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+										</p:commandLink>
+									</p:column>
+								</p:dataTable>
+							</p:outputPanel>
+
+							<h:form id="form2">
+								<p:panelGrid columns="2"
+									styleClass="panelGridCenter companyHeaderGrid">
+									<p:commandLink update="controllers" class="btn btn-danger"
+										style="color: white" actionListener="#{controllers.removeAll}">
+										<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Remover todos
+								</p:commandLink>
+									<button id="form2:exec" name="form2:exec"
+										class="btn btn-success">
+										<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+										Concluir
+									</button>
+									<p:commandButton id="exec" value="Executar"
+										action="#{controllers.executar}" style="display: none" />
+								</p:panelGrid>
+							</h:form>
+						</div>
+					</div>
+				</div>
+
+				<div id="centro">
+					<h5>by M&amp;Ms</h5>
+				</div>
+
+
+			</div>
+			<div id="alerta" class="alert alert-info alert-dismissible"
+				role="alert">
+				<a class="close"> <span class="glyphicon glyphicon-share-alt" />
+				</a> <strong>Dica!</strong><br />Minimize esse menu clicando na barra
+				ao lado.
+			</div>
+		</div>
+		<div id="menu" data-toggle="collapse" data-target="#regras">
+			<a id="botao" data-toggle="collapse" data-target="#regras" />
+		</div>
+		<div id="neo4j">
+			<iframe id="iframe" style="display: relative; overflow: hidden;"
+				src="#{controllers.neo4j}" height="100%" width="100%"></iframe>
+		</div>
+	</div>
+</body>
+</html>

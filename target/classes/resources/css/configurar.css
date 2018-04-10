@@ -1,0 +1,28 @@
+@CHARSET "UTF-8";
+#centro {
+	width: 700px;
+	height: 500px;
+	margin-left: -350px; /* metade da largura */
+	margin-top: -250px; /* metade da altura */
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	text-align: center;
+}
+
+.panelGridCenter .ui-panelgrid-cell {
+	border: none;
+}
+
+.panelGridCenter .ui-widget-content {
+	border: none;
+}
+
+.panelGridCenter {
+	margin: 0 auto;
+	margin-bottom: 10px;
+}
+
+.outPanel {
+	margin-bottom: 10px;
+}

@@ -1,0 +1,11 @@
+@CHARSET "UTF-8";
+#centro {
+	width: 800px;
+	height: 200px;
+	margin-left: -400px; /* metade da largura */
+	margin-top: -100px; /* metade da altura */
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	text-align: center;
+}

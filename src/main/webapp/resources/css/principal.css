@@ -1,0 +1,195 @@
+@CHARSET "UTF-8";
+.panel {
+	display: block;
+	border-radius: 0 !important;
+}
+
+.panel-body {
+	padding: 7px 10px;
+}
+
+.panel-heading {
+	display: block;
+	text-align: center;
+	border-radius: 0 !important;
+	padding: 0;
+	height: 37px;
+}
+
+.panel-title a {
+	height: 100%;
+	display: block;
+	height: 37px;
+	padding-top: 10px;
+}
+
+a:link {
+	text-decoration: none;
+}
+
+a:visited {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+a:active {
+	text-decoration: none;
+}
+
+.panel-heading:hover {
+	background: #e6e6e6;
+}
+
+.companyHeaderGrid.ui-panelgrid>*>tr, .companyHeaderGrid.ui-panelgrid .ui-panelgrid-cell
+	{
+	border: none;
+	padding: 2px 2px;
+}
+
+.panelGridCenter {
+	margin: 0 auto;
+}
+
+.outPanel {
+	text-align: center;
+}
+
+html, body {
+	height: 100%;
+	min-height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	overflow-y: hidden;
+}
+
+#conteudo {
+	min-width: 900px;
+	margin: 0;
+	height: 100%;
+	min-height: 100%;
+}
+
+#menu {
+	width: 20px;
+	height: 100%;
+	float: left;
+	background-color: black;
+}
+
+#regras {
+	width: 406px;
+	height: 100%;
+	float: left;
+}
+
+#neo4j {
+	min-width: 200px;
+	height: 100%;
+	margin-left: 5px;
+	overflow: hidden;
+}
+
+#menu {
+	cursor: pointer;
+	text-align: center;
+	height: 100%;
+}
+
+#botao {
+	color: white;
+	font-size: 20px;
+	display: block;
+	top: 50%;
+	position: absolute;
+	pointer-events: none;
+}
+
+#alerta {
+	margin: 50% 10px 0 10px;
+}
+
+.close {
+	opacity: 1;
+}
+
+.collapse {
+	display: none;
+	visibility: hidden;
+}
+
+.collapse.in {
+	display: block;
+	visibility: visible;
+}
+
+tr.collapse.in {
+	display: table-row;
+}
+
+tbody.collapse.in {
+	display: table-row-group;
+}
+
+.collapsing {
+	position: relative;
+	height: 0;
+	overflow: hidden;
+	-webkit-transition-property: height, visibility;
+	transition-property: height, visibility;
+	-webkit-transition-duration: 0.35s;
+	transition-duration: 0.35s;
+	-webkit-transition-timing-function: ease;
+	transition-timing-function: ease;
+}
+
+.collapsing.width {
+	-webkit-transition-property: width, visibility;
+	transition-property: width, visibility;
+	width: 0;
+	height: auto;
+}
+
+#accordion {
+	width: 406px;
+}
+
+.ui-messages-error {
+	margin: 0 0 7px 0;
+}
+
+.ui-messages-info {
+	margin: 0 0 7px 0;
+}
+
+.ui-messages ul {
+	margin: 0;
+}
+
+.ui-messages-error-icon {
+	display: none;
+}
+
+.ui-messages-info-icon {
+	display: none;
+}
+
+/* Icon when the collapsible content is shown */
+#botao:after {
+	font-family: "Glyphicons Halflings";
+	content: "\e257";
+}
+
+/* Icon when the collapsible content is hidden */
+#botao.collapsed:after {
+	content: "\e258";
+}
+
+#centro {
+	text-align: center;
+}
