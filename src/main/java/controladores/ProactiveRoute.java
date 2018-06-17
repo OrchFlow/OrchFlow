@@ -229,25 +229,13 @@ public class ProactiveRoute {
 			} else {
 				// rD = new RouteData();
 				if (data.get("srcswitch").equals(dataProx.get("dstswitch"))) {
-					rD.setSw(data.get("srcswitch").toString());
-					rD.setIn_port(data.get("srcport").toString());
-					rD.setOut_port(dataProx.get("dstport").toString());
-					rD.setControl(Util.getControl(JsonRel.get("start").toString()));
+					rD = appendObjectData(rD, data, JsonRel, dataProx, "srcswitch",  "srcport", "dstport", "start");
 				} else if (data.get("srcswitch").equals(dataProx.get("srcswitch"))) {
-					rD.setSw(data.get("srcswitch").toString());
-					rD.setIn_port(data.get("srcport").toString());
-					rD.setOut_port(dataProx.get("srcport").toString());
-					rD.setControl(Util.getControl(JsonRel.get("start").toString()));
+					rD = appendObjectData(rD, data, JsonRel, dataProx, "srcswitch",  "srcport", "srcport", "start");
 				} else if (data.get("dstswitch").equals(dataProx.get("dstswitch"))) {
-					rD.setSw(data.get("dstswitch").toString());
-					rD.setIn_port(data.get("dstport").toString());
-					rD.setOut_port(dataProx.get("dstport").toString());
-					rD.setControl(Util.getControl(JsonRel.get("end").toString()));
+					rD = appendObjectData(rD, data, JsonRel, dataProx, "dstswitch",  "dstport", "dstport", "end");
 				} else {
-					rD.setSw(data.get("dstswitch").toString());
-					rD.setIn_port(data.get("dstport").toString());
-					rD.setOut_port(dataProx.get("srcport").toString());
-					rD.setControl(Util.getControl(JsonRel.get("end").toString()));
+					rD = appendObjectData(rD, data, JsonRel, dataProx, "dstswitch",  "dstport", "srcport", "end");
 				}
 
 				// rD.setActive("true");
@@ -273,6 +261,21 @@ public class ProactiveRoute {
 			regrasCompletas.add(rD);
 			aplicaRegra(null);
 		}
+	}
+	
+	public static RegrasData appendObjectData(RegrasData rD, 
+			JSONObject data, 
+			JSONObject JsonRel, 
+			JSONObject dataProx, 
+			String software,
+			String inPort,
+			String outPort,			
+			String control) throws JSONException, URISyntaxException {
+		rD.setSw(data.get(software).toString());
+		rD.setIn_port(data.get(inPort).toString());
+		rD.setOut_port(dataProx.get(outPort).toString());
+		rD.setControl(Util.getControl(JsonRel.get(control).toString()));
+		return rD;
 	}
 
 	public static void aplicaRegra(final RegrasData regra) throws URISyntaxException {
