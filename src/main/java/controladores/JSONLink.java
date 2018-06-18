@@ -52,8 +52,6 @@ public class JSONLink {
 				} else {
 					linkD.setType("internal");
 				}
-				// linkD.setType((String) link.get("type"));
-				// linkD.setDirection((String) link.get("direction"));
 
 				send.links(arraySWD, linkD);
 			}
@@ -123,13 +121,8 @@ public class JSONLink {
 					tp = linkDst.getString("dest-tp");
 					linkD.setDstP(Integer.valueOf(tp.substring(tp.lastIndexOf(":") + 1)));
 
-					// if (linkSrc.getString("link-id").contains("ext")) {
-					// linkD.setType("external");
-					// } else {
 					linkD.setType("internal");
-					// }
 
-					// linkD.setDirection((String) link.get("direction"));
 					System.out.println(
 							linkD.getDstS() + " " + linkD.getSrcS() + " " + linkD.getDstP() + " " + linkD.getSrcP());
 					send.links(arraySWD, linkD);
@@ -154,8 +147,6 @@ public class JSONLink {
 					.header("Authorization", "Basic YWRtaW46YWRtaW4=").get(ClientResponse.class);
 
 			r = response.getEntity(String.class);
-			// System.out.println(String.format("POST to [%s], status code [%d],
-			// location header []", fromUri, response.getStatus()));
 			response.close();
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block

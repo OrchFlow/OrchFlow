@@ -205,7 +205,6 @@ public class JSONSwitch {
 					swD.setInetAddress("");
 					swD = sendNode.nodes(swD);
 					arraySWD.add(swD);
-					// System.out.println(swD.getDPID() + " " + swD.getName());
 				}
 			}
 		}
@@ -228,8 +227,6 @@ public class JSONSwitch {
 					.header("Authorization", "Basic YWRtaW46YWRtaW4=").get(ClientResponse.class);
 
 			r = response.getEntity(String.class);
-			// System.out.println(String.format("POST to [%s], status code [%d],
-			// location header []", fromUri, response.getStatus()));
 			response.close();
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block

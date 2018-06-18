@@ -58,10 +58,6 @@ public class Neo4jHosts {
 				.entity(createJson).header("Authorization", passwd).post(ClientResponse.class);
 
 		if (response.getStatus() == 201 || response.getStatus() == 200) {
-			// final URI location = response.getLocation();
-			// System.out.println(String.format("POST to [%s], status code [%d],
-			// location header [%s]", nodeEntryPointUri,
-			// response.getStatus(), location.toString()));
 
 			JSONObject entity = new JSONObject(response.getEntity(String.class));
 			String uri = entity.get("self").toString();
@@ -69,10 +65,7 @@ public class Neo4jHosts {
 
 			return URI.create(uri);
 		} else {
-			// System.out
-			// .println(String.format("POST to [%s], status code [%d]",
-			// nodeEntryPointUri, response.getStatus()));
-			// System.exit(0);
+
 		}
 
 		return null;
@@ -112,8 +105,6 @@ public class Neo4jHosts {
 		ClientResponse response = resource.accept(MediaType.APPLICATION_JSON).type(MediaType.APPLICATION_JSON)
 				.entity("\"" + label + "\"").header("Authorization", passwd).post(ClientResponse.class);
 
-		// System.out.println(String.format("PUT to [%s], status code [%d]",
-		// propertyUri, response.getStatus()));
 		if (response.getStatus() == 404) {
 			// System.exit(0);
 		}
@@ -131,15 +122,9 @@ public class Neo4jHosts {
 				.entity(relationshipJson).header("Authorization", passwd).post(ClientResponse.class);
 
 		if (response.getStatus() == 201) {
-			// final String location = response.getLocation().toString();
-			// System.out.println(String.format("POST to [%s], status code [%d],
-			// location header [%s]", fromUri,
-			// response.getStatus(), location));
 			response.close();
 		} else {
-			// System.out.println(String.format("POST to [%s], status code
-			// [%d]", fromUri, response.getStatus()));
-			// System.exit(0);
+
 		}
 
 	}

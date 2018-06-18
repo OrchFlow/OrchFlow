@@ -191,57 +191,39 @@ public class ProactiveRoute {
 
 			// SE O LINK ATUAL É DO TIPO HOST
 			if (data.get("type").equals("host")) {
-				// rD = new RouteData();
 				rD.setSw(data.get("srcswitch").toString());
 				rD.setControl(Util.getControl(JsonRel.get("start").toString()));
 				rD.setIn_port(data.get("srcport").toString());
-
-				// rD.setActive("true");
-				// rD.setCookie("0");
-				// rD.setPriority(priority);
 
 				if (data.get("srcswitch").equals(dataProx.get("srcswitch"))) {
 					rD.setOut_port(dataProx.get("srcport").toString());
 				} else {
 					rD.setOut_port(dataProx.get("dstport").toString());
 				}
-				// arrayRoute.add(rD);
 
 				// SE O PROXIMO LINK É DO TIPO HOST
 			} else if (dataProx.get("type").equals("host")) {
-				// rD = new RouteData();
 				rD.setSw(dataProx.get("srcswitch").toString());
 				rD.setControl(Util.getControl(JsonRelProx.get("start").toString()));
 				rD.setOut_port(dataProx.get("srcport").toString());
-
-				// rD.setActive("true");
-				// rD.setCookie("0");
-				// rD.setPriority(priority);
 
 				if (data.get("srcswitch").equals(dataProx.get("srcswitch"))) {
 					rD.setIn_port(data.get("srcport").toString());
 				} else {
 					rD.setIn_port(data.get("dstport").toString());
 				}
-				// arrayRoute.add(rD);
 
 				// SE AMBOS OS LINKS SÃO INTERNOS
 			} else {
-				// rD = new RouteData();
 				if (data.get("srcswitch").equals(dataProx.get("dstswitch"))) {
-					rD = appendObjectData(rD, data, JsonRel, dataProx, "srcswitch",  "srcport", "dstport", "start");
+					rD = appendInterLinkData(rD, data, JsonRel, dataProx, "srcswitch",  "srcport", "dstport", "start");
 				} else if (data.get("srcswitch").equals(dataProx.get("srcswitch"))) {
-					rD = appendObjectData(rD, data, JsonRel, dataProx, "srcswitch",  "srcport", "srcport", "start");
+					rD = appendInterLinkData(rD, data, JsonRel, dataProx, "srcswitch",  "srcport", "srcport", "start");
 				} else if (data.get("dstswitch").equals(dataProx.get("dstswitch"))) {
-					rD = appendObjectData(rD, data, JsonRel, dataProx, "dstswitch",  "dstport", "dstport", "end");
+					rD = appendInterLinkData(rD, data, JsonRel, dataProx, "dstswitch",  "dstport", "dstport", "end");
 				} else {
-					rD = appendObjectData(rD, data, JsonRel, dataProx, "dstswitch",  "dstport", "srcport", "end");
+					rD = appendInterLinkData(rD, data, JsonRel, dataProx, "dstswitch",  "dstport", "srcport", "end");
 				}
-
-				// rD.setActive("true");
-				// rD.setCookie("0");
-				// rD.setPriority(priority);
-				// arrayRoute.add(rD);
 			}
 			rD.setActive(regra.isActive());
 			rD.setCookie(regra.getCookie());
@@ -263,7 +245,7 @@ public class ProactiveRoute {
 		}
 	}
 	
-	public static RegrasData appendObjectData(RegrasData rD, 
+	public static RegrasData appendInterLinkData(RegrasData rD, 
 			JSONObject data, 
 			JSONObject JsonRel, 
 			JSONObject dataProx, 
@@ -366,11 +348,6 @@ public class ProactiveRoute {
 		// Switch MAC Address
 		sb.append(", \"dpid\":");
 		sb.append(Integer.parseInt(rD.getSw(), 16));
-
-		// sb.append(", \"dl-type\":");
-		// sb.append("\"");
-		// sb.append("0x0806");
-		// sb.append("\"");
 
 		sb.append(", \"cookie\":");
 		sb.append(rD.getCookie());
@@ -490,12 +467,7 @@ public class ProactiveRoute {
 		// Switch MAC Address
 		sb.append(", \"dpid\":");
 		sb.append(Integer.parseInt(rD.getSw(), 16));
-
-		// sb.append(", \"dl-type\":");
-		// sb.append("\"");
-		// sb.append("0x0806");
-		// sb.append("\"");
-
+		
 		sb.append(", \"cookie\":");
 		sb.append(rD.getCookie());
 

@@ -44,10 +44,6 @@ public class JSONHost {
 						hostD.setPort(host.getJSONObject("port").getInt("port_no"));
 
 						hostD.setController(controller.getIp() + ":" + controller.getPort());
-						// System.out.println(hostD.getIpv4() + " " +
-						// hostD.getMac() + " " + hostD.getSwitchDPID() + " " +
-						// hostD.getPort());
-
 						send.hosts(arraySWD, hostD);
 					}
 				}
@@ -128,8 +124,6 @@ public class JSONHost {
 					hostD.setPort(Integer.valueOf(tpid.substring(tpid.lastIndexOf(":") + 1)));
 
 					hostD.setController(controller.getIp() + ":" + controller.getPort());
-					// System.out.println(hostD.getIpv4() + " " + hostD.getMac()
-					// + " " + hostD.getSwitchDPID() + " " + hostD.getPort());
 					send.hosts(arraySWD, hostD);
 				}
 			}
@@ -151,8 +145,6 @@ public class JSONHost {
 					.header("Authorization", "Basic YWRtaW46YWRtaW4=").get(ClientResponse.class);
 
 			r = response.getEntity(String.class);
-			// System.out.println(String.format("POST to [%s], status code [%d],
-			// location header []", fromUri, response.getStatus()));
 			response.close();
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block

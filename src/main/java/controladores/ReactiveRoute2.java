@@ -200,14 +200,10 @@ public class ReactiveRoute2 {
 
 			// SE O LINK ATUAL É DO TIPO HOST
 			if (data.get("type").equals("host")) {
-				// rD = new RouteData();
 				rD.setSw(data.get("srcswitch").toString());
 				rD.setControl(Util.getControl(JsonRel.get("start").toString()));
 				rD.setIn_port(data.get("srcport").toString());
 
-				// rD.setActive("true");
-				// rD.setCookie("0");
-				// rD.setPriority(priority);
 
 				if (data.get("srcswitch").equals(dataProx.get("srcswitch"))) {
 					rD.setOut_port(dataProx.get("srcport").toString());
@@ -218,7 +214,6 @@ public class ReactiveRoute2 {
 
 				// SE O PROXIMO LINK É DO TIPO HOST
 			} else if (dataProx.get("type").equals("host")) {
-				// rD = new RouteData();
 				rD.setSw(dataProx.get("srcswitch").toString());
 				rD.setControl(Util.getControl(JsonRelProx.get("start").toString()));
 				rD.setOut_port(dataProx.get("srcport").toString());
@@ -232,11 +227,9 @@ public class ReactiveRoute2 {
 				} else {
 					rD.setIn_port(data.get("dstport").toString());
 				}
-				// arrayRoute.add(rD);
 
 				// SE AMBOS OS LINKS SÃO INTERNOS
 			} else {
-				// rD = new RouteData();
 				if (data.get("srcswitch").equals(dataProx.get("dstswitch"))) {
 					rD.setSw(data.get("srcswitch").toString());
 					rD.setIn_port(data.get("srcport").toString());
@@ -259,10 +252,6 @@ public class ReactiveRoute2 {
 					rD.setControl(Util.getControl(JsonRel.get("end").toString()));
 				}
 
-				// rD.setActive("true");
-				// rD.setCookie("0");
-				// rD.setPriority(priority);
-				// arrayRoute.add(rD);
 			}
 			rD.setActive(regra.isActive());
 			rD.setCookie(regra.getCookie());
@@ -287,26 +276,7 @@ public class ReactiveRoute2 {
 
 	public static void aplicaRegra(RegrasData regra) throws URISyntaxException {
 		if (regra != null) {
-			// String controller = null;
-			// for (int i = 0; i < Controllers.getControl().size(); i++) {
-			// if (regra.getControl().equals(
-			// Controllers.getControl().get(i).getIp() + ":" +
-			// Controllers.getControl().get(i).getPort())) {
-			// controller = Controllers.getControl().get(i).getController();
-			// }
-			// }
-
-			// String url = null;
-			// String flow = null;
-			//
-			// if (controller.equals("Ryu")) {
-			// url = "http://" + regra.getControl() + "/stats/flowentry/add";
-			// // flowIDA = generateJsonFlowIDA_RYU(regra);
-			// // flowVOLTA = generateJsonFlowVOLTA_RYU(regra);
-			// } else if (controller.equals("Floodlight")) {
-			// url = "http://" + regra.getControl() +
-			// "/wm/staticflowpusher/json";
-			// } else if (controller.equals("OpenDaylight")) {
+		
 			// // TODO OpenDaylight controller
 			// }
 			String flow = Util.generateJsonFlowReactive(regra);
