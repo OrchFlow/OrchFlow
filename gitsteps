@@ -1,0 +1,14 @@
+git pull
+
+git checkout -b remocao_regra
+
+na pasta do git
+git add -p (usar yes or not para controlar o que está subindo para o repositório)
+git commit -m "Corrige remoção da regra"
+git push origin remocao_regra
+
+Depois de feitas as alterações, commit e push, abrir o merge request referenciando a issue que você está trabalhando, ex: Closes #10 (id da issue)
+
+Outra pessoa precisa revisar o código antes de mergear o pull request
+
+(antes de mergear preciso estar na branch que estou trabalhando. Para mudar para a branch que quero ver o código basta colocar no terminal: git checkou nome_da_branch)
