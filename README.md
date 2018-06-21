@@ -1,2 +1,2 @@
 # OrchFlow
-Orchestrator for SDN networks with multiple OpenFlow protocol
+An architecture for orchestration of multiple controllers in OpenFlow networks
